@@ -19,6 +19,11 @@ export function findDiscountByCode(code: string): DiscountCode | undefined {
   return discountCodes.get(code);
 }
 
+/** Needed for admin stats (Stage 12) — the full list of codes, used or not. */
+export function findAllDiscountCodes(): DiscountCode[] {
+  return [...discountCodes.values()];
+}
+
 /**
  * How many discount codes have ever been generated. Since generation
  * always claims the lowest unclaimed milestone in order, this number

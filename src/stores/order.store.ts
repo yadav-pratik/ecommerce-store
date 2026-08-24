@@ -3,15 +3,17 @@ import type { Order } from '../models/order';
 /**
  * In-memory order storage — same shape as the other stores: one Map owned
  * by this module, plain functions to read and write it, no class.
- *
- * `findAllOrders` gets added later, exactly when admin stats (Stage 12)
- * need it — not ahead of time.
  */
 let orders = new Map<string, Order>();
 
 export function saveOrder(order: Order): Order {
   orders.set(order.id, order);
   return order;
+}
+
+/** Needed for admin stats (Stage 12) — every order counts, there is no pending/cancelled status. */
+export function findAllOrders(): Order[] {
+  return [...orders.values()];
 }
 
 /**
