@@ -20,6 +20,16 @@ export function findDiscountByCode(code: string): DiscountCode | undefined {
 }
 
 /**
+ * How many discount codes have ever been generated. Since generation
+ * always claims the lowest unclaimed milestone in order, this number
+ * doubles as "which milestone is next" (this count + 1) and as
+ * `codesAlreadyGenerated` in the eligibility formula.
+ */
+export function countDiscountCodes(): number {
+  return discountCodes.size;
+}
+
+/**
  * Marks a code as used. Mutates the stored object directly, same as
  * cart.store's addItemToCart/clearCart — the Map holds this object by
  * reference, so there's no separate "save" step.

@@ -4,6 +4,7 @@ import { healthRoutes } from './routes/health.routes';
 import { productRoutes } from './routes/product.routes';
 import { cartRoutes } from './routes/cart.routes';
 import { checkoutRoutes } from './routes/checkout.routes';
+import { adminRoutes } from './routes/admin.routes';
 import { swaggerSpec } from './docs/swagger';
 import { errorHandler } from './middleware/errorHandler';
 
@@ -14,7 +15,7 @@ import { errorHandler } from './middleware/errorHandler';
  * server.ts starts a listener from it, and a test could build a fresh
  * app without opening a port.
  *
- * Remaining routes (admin) are mounted in later stages.
+ * Remaining routes (admin stats) are mounted in a later stage.
  */
 export function createApp(): Express {
   const app = express();
@@ -25,6 +26,7 @@ export function createApp(): Express {
   app.use('/api/products', productRoutes);
   app.use('/api/carts', cartRoutes);
   app.use('/api/checkout', checkoutRoutes);
+  app.use('/api/admin', adminRoutes);
 
   // Swagger UI: reads the spec assembled from @openapi comment blocks
   // scattered across route files (see src/docs/swagger.ts).

@@ -25,6 +25,7 @@ function seedDiscount(overrides: Partial<DiscountCode> = {}): DiscountCode {
   return saveDiscountCode({
     code: 'SAVE10-TEST',
     percentage: 10,
+    milestone: 1,
     used: false,
     createdAt: new Date(),
     ...overrides,

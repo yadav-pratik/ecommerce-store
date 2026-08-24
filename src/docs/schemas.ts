@@ -105,6 +105,10 @@
  *         percentage:
  *           type: number
  *           example: 10
+ *         milestone:
+ *           type: integer
+ *           description: Which nth-order eligibility this code was generated for.
+ *           example: 1
  *         used:
  *           type: boolean
  *           example: false
@@ -115,7 +119,7 @@
  *         createdAt:
  *           type: string
  *           format: date-time
- *       required: [code, percentage, used, createdAt]
+ *       required: [code, percentage, milestone, used, createdAt]
  *     Error:
  *       type: object
  *       description: Uniform error shape returned by every failing response.

@@ -20,6 +20,7 @@ const definition: OAS3Definition = {
     { name: 'Products', description: 'Read-only product catalogue' },
     { name: 'Cart', description: 'Cart creation and items' },
     { name: 'Checkout', description: 'Turning a cart into a completed order' },
+    { name: 'Admin', description: 'Discount eligibility, generation, and store statistics' },
   ],
 };
 
