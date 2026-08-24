@@ -2,7 +2,9 @@ import express, { type Express } from 'express';
 import swaggerUi from 'swagger-ui-express';
 import { healthRoutes } from './routes/health.routes';
 import { productRoutes } from './routes/product.routes';
+import { cartRoutes } from './routes/cart.routes';
 import { swaggerSpec } from './docs/swagger';
+import { errorHandler } from './middleware/errorHandler';
 
 /**
  * Builds the Express application.
@@ -11,7 +13,7 @@ import { swaggerSpec } from './docs/swagger';
  * server.ts starts a listener from it, and a test could build a fresh
  * app without opening a port.
  *
- * Remaining routes (cart, checkout, admin) are mounted in later stages.
+ * Remaining routes (checkout, admin) are mounted in later stages.
  */
 export function createApp(): Express {
   const app = express();
@@ -20,6 +22,7 @@ export function createApp(): Express {
 
   app.use('/health', healthRoutes);
   app.use('/api/products', productRoutes);
+  app.use('/api/carts', cartRoutes);
 
   // Swagger UI: reads the spec assembled from @openapi comment blocks
   // scattered across route files (see src/docs/swagger.ts).
@@ -35,6 +38,9 @@ export function createApp(): Express {
       },
     });
   });
+
+  // Must be last: turns anything a route throws into the same JSON shape.
+  app.use(errorHandler);
 
   return app;
 }

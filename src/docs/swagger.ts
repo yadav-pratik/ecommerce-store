@@ -18,6 +18,7 @@ const definition: OAS3Definition = {
   tags: [
     { name: 'Health', description: 'Service availability' },
     { name: 'Products', description: 'Read-only product catalogue' },
+    { name: 'Cart', description: 'Cart creation and items' },
   ],
 };
 
