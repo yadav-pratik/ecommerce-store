@@ -1,4 +1,5 @@
 import express, { type Express } from 'express';
+import { healthRoutes } from './routes/health.routes';
 
 /**
  * Builds the Express application.
@@ -7,12 +8,14 @@ import express, { type Express } from 'express';
  * server.ts starts a listener from it, and tests can build a fresh app
  * without opening a port.
  *
- * Routes are mounted in later stages.
+ * Remaining routes (cart, checkout, admin) are mounted in later stages.
  */
 export function createApp(): Express {
   const app = express();
 
   app.use(express.json());
+
+  app.use('/health', healthRoutes);
 
   // Unknown routes return JSON rather than Express's default HTML page,
   // so every response from this service has the same shape.
