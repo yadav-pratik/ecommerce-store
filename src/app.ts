@@ -1,14 +1,15 @@
 import express, { type Express } from 'express';
 import swaggerUi from 'swagger-ui-express';
 import { healthRoutes } from './routes/health.routes';
+import { productRoutes } from './routes/product.routes';
 import { swaggerSpec } from './docs/swagger';
 
 /**
  * Builds the Express application.
  *
  * This is deliberately a factory rather than a module-level singleton:
- * server.ts starts a listener from it, and tests can build a fresh app
- * without opening a port.
+ * server.ts starts a listener from it, and a test could build a fresh
+ * app without opening a port.
  *
  * Remaining routes (cart, checkout, admin) are mounted in later stages.
  */
@@ -18,6 +19,7 @@ export function createApp(): Express {
   app.use(express.json());
 
   app.use('/health', healthRoutes);
+  app.use('/api/products', productRoutes);
 
   // Swagger UI: reads the spec assembled from @openapi comment blocks
   // scattered across route files (see src/docs/swagger.ts).

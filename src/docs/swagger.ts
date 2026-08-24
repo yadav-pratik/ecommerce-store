@@ -15,7 +15,10 @@ const definition: OAS3Definition = {
       'Cart, checkout and nth-order discount APIs for an in-memory ecommerce store.',
   },
   servers: [{ url: '/', description: 'Current server' }],
-  tags: [{ name: 'Health', description: 'Service availability' }],
+  tags: [
+    { name: 'Health', description: 'Service availability' },
+    { name: 'Products', description: 'Read-only product catalogue' },
+  ],
 };
 
 const options: OAS3Options = {
