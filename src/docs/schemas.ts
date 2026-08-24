@@ -5,9 +5,8 @@
  * scan has a home for shapes that are shared across multiple endpoints,
  * declared once and referenced with `$ref` instead of repeated inline.
  *
- * Domain schemas (DiscountCode) are added here as that model is
- * introduced in a later stage, not before — this file should only ever
- * describe shapes that actually exist in the code.
+ * This file should only ever describe shapes that actually exist in the
+ * code — nothing is added here ahead of the model/route that needs it.
  *
  * @openapi
  * components:
@@ -97,6 +96,26 @@
  *           type: string
  *           format: date-time
  *       required: [id, items, subtotal, discountAmount, total, createdAt]
+ *     DiscountCode:
+ *       type: object
+ *       properties:
+ *         code:
+ *           type: string
+ *           example: SAVE10-X8K2
+ *         percentage:
+ *           type: number
+ *           example: 10
+ *         used:
+ *           type: boolean
+ *           example: false
+ *         usedByOrderId:
+ *           type: string
+ *           nullable: true
+ *           example: order_1b4e28ba-2fa1-11d2-883f-0016d3cca427
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *       required: [code, percentage, used, createdAt]
  *     Error:
  *       type: object
  *       description: Uniform error shape returned by every failing response.

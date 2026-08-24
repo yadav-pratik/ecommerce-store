@@ -2,21 +2,22 @@ import { randomUUID } from 'node:crypto';
 import type { Order, OrderItem } from '../models/order';
 import { createAppError } from '../errors/appError';
 import { getCart } from './cart.service';
+import { calculateDiscountAmount, consumeDiscountCode, validateDiscountCode } from './discount.service';
 import { clearCart } from '../stores/cart.store';
 import { findProductById } from '../stores/product.store';
 import { saveOrder } from '../stores/order.store';
 
 /**
- * Checks out a cart: resolves real prices, builds and saves the order,
- * then empties the cart. `cartId` is typed `unknown` because it comes
- * straight from a request body — same boundary pattern as
- * cart.service.ts's addItemToCart.
+ * Checks out a cart. Follows the assignment's checkout steps in order:
+ * find the cart, validate it exists and isn't empty, resolve prices,
+ * calculate the subtotal, validate the discount code if one was given,
+ * calculate the discount and total, create the order, mark the discount
+ * code used, clear the cart, return the order.
  *
- * Discount code handling is added in a later stage, once a discount store
- * actually exists — for now `discountAmount` is always 0 and `total`
- * always equals `subtotal`.
+ * `cartId`/`discountCode` are typed `unknown` because they come straight
+ * from a request body — same boundary pattern as cart.service.ts.
  */
-export function checkout(cartId: unknown): Order {
+export function checkout(cartId: unknown, discountCode?: unknown): Order {
   if (typeof cartId !== 'string' || cartId.trim() === '') {
     throw createAppError(400, 'VALIDATION_ERROR', 'cartId is required and must be a string');
   }
@@ -48,16 +49,40 @@ export function checkout(cartId: unknown): Order {
 
   const subtotal = orderItems.reduce((sum, item) => sum + item.lineTotal, 0);
 
+  // discountCode is optional — null/undefined both mean "none supplied".
+  // Anything else must be a real, non-empty string.
+  let discount = undefined;
+  let discountAmount = 0;
+
+  if (discountCode !== undefined && discountCode !== null) {
+    if (typeof discountCode !== 'string' || discountCode.trim() === '') {
+      throw createAppError(400, 'VALIDATION_ERROR', 'discountCode must be a string');
+    }
+    discount = validateDiscountCode(discountCode); // throws 400 if unknown/used
+    discountAmount = calculateDiscountAmount(subtotal, discount);
+  }
+
+  const total = subtotal - discountAmount;
+
   const order: Order = {
     id: `order_${randomUUID()}`,
     items: orderItems,
     subtotal,
-    discountAmount: 0,
-    total: subtotal,
+    discountAmount,
+    total,
     createdAt: new Date(),
   };
 
+  if (discount) {
+    order.discountCode = discount.code;
+  }
+
   saveOrder(order);
+
+  if (discount) {
+    consumeDiscountCode(discount, order.id);
+  }
+
   clearCart(cart);
 
   return order;
