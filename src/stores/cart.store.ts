@@ -43,6 +43,15 @@ export function addItemToCart(cart: Cart, productId: string, quantity: number): 
   return cart;
 }
 
+/**
+ * Empties a cart's items after a successful checkout. Same in-place
+ * mutation approach as addItemToCart — the cart record itself stays (its
+ * id remains valid), only its contents are cleared.
+ */
+export function clearCart(cart: Cart): void {
+  cart.items = [];
+}
+
 /** Test-only helper — clears every cart back to an empty store. */
 export function resetCartStore(): void {
   carts = new Map();

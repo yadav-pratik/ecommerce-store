@@ -5,8 +5,8 @@
  * scan has a home for shapes that are shared across multiple endpoints,
  * declared once and referenced with `$ref` instead of repeated inline.
  *
- * Domain schemas (Order, DiscountCode) are added here as those models are
- * introduced in later stages, not before — this file should only ever
+ * Domain schemas (DiscountCode) are added here as that model is
+ * introduced in a later stage, not before — this file should only ever
  * describe shapes that actually exist in the code.
  *
  * @openapi
@@ -49,6 +49,54 @@
  *           type: string
  *           format: date-time
  *       required: [id, items, createdAt]
+ *     OrderItem:
+ *       type: object
+ *       description: A price snapshot at checkout time — not a live product reference.
+ *       properties:
+ *         productId:
+ *           type: string
+ *           example: product-1
+ *         name:
+ *           type: string
+ *           example: Wireless Mouse
+ *         unitPrice:
+ *           type: number
+ *           example: 799
+ *         quantity:
+ *           type: integer
+ *           example: 2
+ *         lineTotal:
+ *           type: number
+ *           example: 1598
+ *       required: [productId, name, unitPrice, quantity, lineTotal]
+ *     Order:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           example: order_1b4e28ba-2fa1-11d2-883f-0016d3cca427
+ *         items:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/OrderItem'
+ *         subtotal:
+ *           type: number
+ *           example: 1598
+ *         discountCode:
+ *           type: string
+ *           nullable: true
+ *           description: Present only when a discount code was applied.
+ *           example: SAVE10-X8K2
+ *         discountAmount:
+ *           type: number
+ *           example: 0
+ *         total:
+ *           type: number
+ *           example: 1598
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *       required: [id, items, subtotal, discountAmount, total, createdAt]
  *     Error:
  *       type: object
  *       description: Uniform error shape returned by every failing response.
