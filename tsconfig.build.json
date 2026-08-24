@@ -1,0 +1,11 @@
+{
+  /* Build config: same compiler options, but only src/ is emitted so that
+     dist/ contains the application and not the test files.
+     tsconfig.json (which also includes tests/) is what the editor and
+     `npm run typecheck` use. */
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src"
+  },
+  "include": ["src"]
+}
