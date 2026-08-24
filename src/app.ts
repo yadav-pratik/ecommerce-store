@@ -1,5 +1,7 @@
 import express, { type Express } from 'express';
+import swaggerUi from 'swagger-ui-express';
 import { healthRoutes } from './routes/health.routes';
+import { swaggerSpec } from './docs/swagger';
 
 /**
  * Builds the Express application.
@@ -16,6 +18,10 @@ export function createApp(): Express {
   app.use(express.json());
 
   app.use('/health', healthRoutes);
+
+  // Swagger UI: reads the spec assembled from @openapi comment blocks
+  // scattered across route files (see src/docs/swagger.ts).
+  app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
   // Unknown routes return JSON rather than Express's default HTML page,
   // so every response from this service has the same shape.
