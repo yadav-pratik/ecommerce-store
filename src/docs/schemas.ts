@@ -136,4 +136,11 @@
  *           required: [code, message]
  *       required: [error]
  */
-export {};
+// A real export, not `export {}` — tsc's CommonJS output for a file whose
+// only content is `export {}` drops the leading comment entirely (verified
+// directly: `export {}` compiles to just the module boilerplate, with the
+// JSDoc above it silently gone). A genuine export, even one nobody
+// imports, keeps the comment attached in the compiled output too — which
+// is what `npm start` actually reads (`npm run dev` reads the .ts source
+// directly, so it never showed this bug).
+export const openApiSchemasDocumentedInThisFile = true;
